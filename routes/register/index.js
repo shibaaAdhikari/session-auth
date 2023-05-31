@@ -34,7 +34,7 @@ export default function (fastify, opts, done) {
 
   fastify.get("/", getRegisterUsersOpts);
   fastify.post("/", postRegisterOpts);
-  fastify.post("/:id", logoutOpts);
+  fastify.post("/logout", logoutOpts);
 
   done();
 }

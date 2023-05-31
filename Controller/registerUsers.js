@@ -51,21 +51,24 @@ const postRegister = async (req, reply) => {
 };
 
 const logout = async (req, reply) => {
-  // try {
-  //   req.session.destroy((err) => {
-  //     if (err) {
-  //       console.error(err);
-  //       reply.code(500).send({ message: "Session could not be cleared" });
-  //       return;
-  //     }
-  //     console.log("Session ID cleared");
-  //     reply.send({ message: "logged out successfully" });
-  //   });
-  // } catch (error) {
-  //   console.error(error);
-  //   reply.code(500).send({ message: "Internal Server Error" });
-  // }
-  await req.session.destroy();
+  try {
+    const id = req.session.id;
+    req.session.destroy((err) => {
+      if (err) {
+        console.error(err);
+        reply.code(500).send({ message: "Session could not be cleared" });
+        return;
+      }
+      reply.clearCookie(process.env.SESSION_COOKIE_NAME, {
+        path: "/",
+        httpOnly: true,
+      });
+      reply.send({ message: "logged out successfully" });
+    });
+  } catch (error) {
+    console.error(error);
+    reply.code(500).send({ message: "Internal Server Error okayy" });
+  }
 };
 
 export { getRegisterUsers, getRegisterUsersById, postRegister, logout };
